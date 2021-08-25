@@ -48,7 +48,7 @@ router.post('/', (req, res) => {
       expireSeconds: 30,
     });
     console.dir(result.processed.block_num);
-    res.send(result.processed)
+    res.send(JSON.stringify(result.processed))
 
   })().then(_result => {
     // process the result 
