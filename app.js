@@ -3,6 +3,9 @@ var express = require('express');
 var cors = require('cors')
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const xss = require('xss-clean');
 var logger = require('morgan');
 
 const AppError = require('./utils/appError')
@@ -24,6 +27,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Set security HTTP headers
+app.use(helmet());
+
+// Limit requests from same API
+
+app.set('trust proxy', 1);
+
+const limiter = rateLimit({
+  max: 5, // 5 requests per windowMs 
+  windowMs: 5 * 60 * 1000,
+  message: "✋🏼ಸ್ವಲ್ಪ ತಡಿ ಗುರು, ೫ ನಿಮಿಷ ಆದ್ಮೇಲೆ ನೋಡು!"
+});
+app.use(limiter);
+
+// Data sanitization against XSS
+app.use(xss());
 
 app.use('/', indexRouter);
 app.use('/balance', usersRouter);
