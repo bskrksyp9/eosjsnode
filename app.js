@@ -38,7 +38,7 @@ app.set('trust proxy', 1);
 const limiter = rateLimit({
   max: 5, // 5 requests per windowMs 
   windowMs: 5 * 60 * 1000,
-  message: "✋🏼ಸ್ವಲ್ಪ ತಡಿ ಗುರು, ೫ ನಿಮಿಷ ಆದ್ಮೇಲೆ ನೋಡು!"
+  message: "✋🏼Hold on! You've consumed fair request limit, please try again after 5 minutes!"
 });
 app.use(limiter);
 
