@@ -79,6 +79,25 @@ router.get('/', (req, res) => {
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "internalType": "string",
+          "name": "title_kn",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "title_en",
+          "type": "string"
+        }
+      ],
+      "name": "LogRegTitles",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "internalType": "address",
           "name": "previousOwner",
@@ -120,6 +139,19 @@ router.get('/', (req, res) => {
       "type": "event"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "sym",
+          "type": "string"
+        }
+      ],
+      "name": "newNFTEv",
+      "type": "event"
+    },
+    {
       "inputs": [],
       "name": "CANNOT_TRANSFER_TO_ZERO_ADDRESS",
       "outputs": [
@@ -143,6 +175,35 @@ router.get('/', (req, res) => {
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "titleID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "title_kn",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "title_en",
+          "type": "string"
+        }
+      ],
+      "name": "addTitle",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -217,6 +278,30 @@ router.get('/', (req, res) => {
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "titleID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRegTitlebyId",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "title_kn",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "title_en",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "_owner",
           "type": "address"
@@ -232,6 +317,25 @@ router.get('/', (req, res) => {
         {
           "internalType": "bool",
           "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "titleID",
+          "type": "uint256"
+        }
+      ],
+      "name": "isExist",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "isIndeed",
           "type": "bool"
         }
       ],
@@ -257,27 +361,22 @@ router.get('/', (req, res) => {
         },
         {
           "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
           "name": "sym",
           "type": "string"
         },
         {
+          "internalType": "uint256",
+          "name": "tid",
+          "type": "uint256"
+        },
+        {
           "internalType": "string",
-          "name": "nfttype",
+          "name": "tkn",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "desc",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "price",
+          "name": "ten",
           "type": "string"
         }
       ],
@@ -459,6 +558,19 @@ router.get('/', (req, res) => {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "titlesCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -514,10 +626,10 @@ router.get('/', (req, res) => {
       "type": "function"
     }
   ]
-  const address = '0xAB60D9b88Fef94CD05f99f25Cbd1dCf47D1C85e0' // Paste the smart contract address here after you have deployed it
+  const address = '0x24119a644B14d8d717bBcF31e6c76FeAC53E63C1' // Paste the smart contract address here after you have deployed it
   const contract = new web3.eth.Contract(abi, address)
 
-  const owner = '0x1FBc21C8f48958E7f90A6d719d78A7f3d48E8b93' // Paste the 1st account from Ganache here
+  const owner = '0x0Fd14245d4a4F80bF78141351DF47AA864F990B0' // Paste the 1st account from Ganache here
   // const value = req.body.val; // Paste the 2nd account from Ganache here
   const account2 = '' // Paste the 3rd account from Ganache here
 
@@ -530,7 +642,7 @@ router.get('/', (req, res) => {
     // result = await contract.methods.store(value).send({ from: owner })
     // console.log(`Calling Store Method =>`, result)
 
-    result2 = await contract.methods.name().call()
+    result2 = await contract.methods.symbol().call()
     console.log(`Calling Name method =>`, result2)
 
     res.send(JSON.stringify(result2));
@@ -595,6 +707,35 @@ router.post('/', function (req, res) {
 
   const abi = [
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "titleID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "title_kn",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "title_en",
+          "type": "string"
+        }
+      ],
+      "name": "addTitle",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -650,6 +791,86 @@ router.post('/', function (req, res) {
       "type": "event"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_approved",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "title_kn",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "title_en",
+          "type": "string"
+        }
+      ],
+      "name": "LogRegTitles",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_uri",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "sym",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tid",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "tkn",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "ten",
+          "type": "string"
+        }
+      ],
+      "name": "mint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
@@ -667,6 +888,57 @@ router.post('/', function (req, res) {
       ],
       "name": "OwnershipTransferred",
       "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "anonymous": false,
@@ -694,36 +966,46 @@ router.post('/', function (req, res) {
       "type": "event"
     },
     {
-      "inputs": [],
-      "name": "CANNOT_TRANSFER_TO_ZERO_ADDRESS",
-      "outputs": [
+      "anonymous": false,
+      "inputs": [
         {
+          "indexed": true,
           "internalType": "string",
-          "name": "",
+          "name": "sym",
           "type": "string"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
+      "name": "newNFTEv",
+      "type": "event"
     },
     {
-      "inputs": [],
-      "name": "NOT_CURRENT_OWNER",
-      "outputs": [
+      "inputs": [
         {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
+          "internalType": "address",
+          "name": "_operator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_approved",
+          "type": "bool"
         }
       ],
-      "stateMutability": "view",
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_approved",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_to",
           "type": "address"
         },
         {
@@ -732,7 +1014,20 @@ router.post('/', function (req, res) {
           "type": "uint256"
         }
       ],
-      "name": "approve",
+      "name": "transferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -751,6 +1046,19 @@ router.post('/', function (req, res) {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "CANNOT_TRANSFER_TO_ZERO_ADDRESS",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
         }
       ],
       "stateMutability": "view",
@@ -791,6 +1099,30 @@ router.post('/', function (req, res) {
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "titleID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRegTitlebyId",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "title_kn",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "title_en",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "_owner",
           "type": "address"
@@ -815,49 +1147,20 @@ router.post('/', function (req, res) {
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "_to",
-          "type": "address"
-        },
-        {
           "internalType": "uint256",
-          "name": "_tokenId",
+          "name": "titleID",
           "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "_uri",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "sym",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "nfttype",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "desc",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "price",
-          "type": "string"
         }
       ],
-      "name": "mint",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "name": "isExist",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "isIndeed",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -880,6 +1183,19 @@ router.post('/', function (req, res) {
         {
           "internalType": "string",
           "name": "_nftype",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "NOT_CURRENT_OWNER",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
           "type": "string"
         }
       ],
@@ -934,75 +1250,6 @@ router.post('/', function (req, res) {
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "_from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "safeTransferFrom",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "_data",
-          "type": "bytes"
-        }
-      ],
-      "name": "safeTransferFrom",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_operator",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "_approved",
-          "type": "bool"
-        }
-      ],
-      "name": "setApprovalForAll",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "bytes4",
           "name": "_interfaceID",
           "type": "bytes4"
@@ -1033,6 +1280,19 @@ router.post('/', function (req, res) {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "titlesCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -1050,61 +1310,24 @@ router.post('/', function (req, res) {
       ],
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferFrom",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
     }
   ]
-  const address = '0xAB60D9b88Fef94CD05f99f25Cbd1dCf47D1C85e0';// Paste the smart contract address here after you have deployed it
+  const address = '0x24119a644B14d8d717bBcF31e6c76FeAC53E63C1';// Paste the smart contract address here after you have deployed it
   const contract = new web3.eth.Contract(abi, address);
 
-  const owner = '0x1FBc21C8f48958E7f90A6d719d78A7f3d48E8b93';// Paste the 1st account from Ganache here
+  const owner = '0x0Fd14245d4a4F80bF78141351DF47AA864F990B0';// Paste the 1st account from Ganache here
   // const value = req.body.val; // Paste the 2nd account from Ganache here
   const account2 = ''; // Paste the 3rd account from Ganache here
 
   (async () => {
-    let _to = `0x1FBc21C8f48958E7f90A6d719d78A7f3d48E8b93`;
+    let _to = '0xD4Fd5961Cb8907B4b734507Ee8F4Ed3961038242';
     let _tokenId = req.body._tokenId;
     let _uri = req.body._uri;
-    let name = req.body.name;
     let sym = req.body.sym;
-    let nfttype = req.body.nfttype;
-    let desc = req.body.desc;
-    let price = req.body.price;
-    let result = await contract.methods.mint(_to, _tokenId, _uri, name, sym, nfttype, desc, price).send({ from: owner, gas: 600000 });
+    let nfttype = req.body.tid;
+    let desc = req.body.tkn;
+    let price = req.body.ten;
+    let result = await contract.methods.mint(_to, _tokenId, _uri, sym, nfttype, desc, price).send({ from: owner, gas: 350000 });
     console.log(`Calling Mint method =>`, result);
     res.send(JSON.stringify(result));
   })().then(_result => {
